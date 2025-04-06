@@ -88,13 +88,64 @@ class DatabaseHandler:
     These functions are a bit more complex because sometimes you might want to conditionally update or fetch something.
     Could be modified to use an SQL query if we use an SQL database.
     """
-    def update(data, new_data, table: str) -> bool: 
+    def update(data, new_data, column, table: str) -> bool: 
         """
         Replaces instances of data with new_data
         """
-        ...
+
+        result = True
+
+        # Fetch data currently in row
+        query_statement = "SELECT " + column + " FROM " + table + " WHERE " + column + " = " + data
+        mycursor.execute(query_statement)
+
+        curr_data = mycursor.fetchall() # Fetch recently executed query
+        curr_data = list(zip(*curr_data)) # Convert query of data into a list/array of items
+
+
+        # Update data in row
+        query_statement = "UPDATE " + table + " SET " + column + " = " + data + " WHERE" + column + " = " + new_data
+        mycursor.execute(query_statement)
+
+        updated_data = mycursor.fetchall() # Fetch recently executed query
+        updated_data = list(zip(*curr_data)) # Convert query of data into a list/array of items
+
+
+        # Determine if data was updated, if data was the same or unsuccessful return false
+        length = len(curr_data)
+
+        if (len(curr_data) == len(updated_data)):
+
+            # Check contents of fetched rows
+            for i in range(length):
+                if (curr_data[i] != updated_data[i]):
+                    result = False
+
+        else:
+            result = False
+        
+        return result
+
+
     def fetch_row(condition, table: str) -> list:
-        ...
+        
+        # Fetch row
+        query_statement = "SELECT * FROM " + table + " " + condition # Assuming "condition" contains WHERE statement for query
+        mycursor.execute(query_statement)
+
+        data = mycursor.fetchall() # Fetch recently executed query
+        data = list(zip(*data)) # Convert query of data into a list/array of items
+
+        return data
+    
         
     def fetch_table(table: str) -> list:
-        ...
+        
+        # Fill arrays with data from both columns in the database
+        query_statement = "SELECT * FROM " + table
+        mycursor.execute(query_statement)
+
+        data = mycursor.fetchall() # Fetch recently executed query
+        data = list(zip(*data)) # Convert query of data into a list/array of items
+
+        return data

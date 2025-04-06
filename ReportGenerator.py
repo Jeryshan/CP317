@@ -102,7 +102,7 @@ class ReportGenerator:
         name of items from the database and the second contains
         the second column name of the table being either "Revenue"
         or "Stock". database_table is the table name in the database
-        to select. Using these paramters, the program will
+        to select. Using these parameters, the program will
         execute query statements to gather this data into two
         arrays which will then be plotted onto a bar graph.
         -------------------------------------------------------
